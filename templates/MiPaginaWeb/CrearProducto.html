@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/StyleAP.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'assets/bootstrap/js/jquery.min.js' %}"></script>
+</head>
+
+<body>
+
+    </script>
+    <form action="/crearProducto/" method="POST">{% csrf_token %}
+        <nav id="container">
+            <div id="divnombreProd">
+                <p>Nombre</p>
+                <input type="text" required pattern="[A-Za-z ]+" minlength="1" name="nombreProd" id="nombreProd">
+            </div>
+            <div id="divVersionProd">
+                <p>Versión</p>
+                <input type="text" required name="versionProd" style="width: 100px;" minlength="1" id="version">
+            </div>
+
+            <div id="divfechaLimite">
+                <p>Fecha Limite</p>
+                <input type="date" required name="fechaLimite" minlength="1" id="fechaLimite">
+
+            </div>
+
+            <select name="centroOrigen" id="centroOrigen">
+              <option value="Centro de Software Libre (CESOL)">Centro de Software Libre (CESOL)</option>
+              <option value="Centro de Innovación y Desarrollo para Internet (CIDI)">Centro de Innovación y Desarrollo para Internet (CIDI)</option>
+              <option value="Centro de Informatización de la Gestión Documental (CIGED)">Centro de Informatización de la Gestión Documental (CIGED)</option>
+              <option value="Centro de Gobierno Electrónico (CEGEL)">Centro de Gobierno Electrónico (CEGEL)</option>
+              <option value="Centro de Informatización de la Gestión de Entidades (CEIGE)">Centro de Informatización de la Gestión de Entidades (CEIGE)</option>
+              <option value="Centro de Tecnologías para la Formación (FORTES)">Centro de Tecnologías para la Formación (FORTES)</option>
+              <option value="Centro de Tecnologías Interactivas">Centro de Tecnologías Interactivas</option>
+              <option value="Centro de Representación y Análisis de Datos (CREAD)">Centro de Representación y Análisis de Datos (CREAD)</option>
+              <option value="Centro de Informática Médica (CESIM)">Centro de Informática Médica (CESIM)</option>
+              <option value="Centro de Soporte">Centro de Soporte</option>
+            </select>
+
+
+
+            <select name="terminado" id="terminado">
+             <option value="terminado">El producto esta terminado</option>
+             <option value="noTerminado">El producto esta en proseso de revisión</option>   
+            </select>
+
+            <div id="diviteracion">
+                <p>Iteración</p>
+                <input type="number" min="0" required name="iteracion" style="margin-left: 10px;" id="iteracion">
+
+            </div>
+
+        </nav>
+        <hr>
+        <div id="mensaje" style="color: blue; width: 400px; height: 20px; position: absolute;"></div>
+        <input type="submit" value="Registrar" style="margin-left: 589px;" class="btn btn-primary" id="registrarce">
+
+        <hr>
+    </form>
+
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+CREATE TABLE public.usuarios
+(
+    id serial NOT NULL,
+    ip text,
+    nombre text NOT NULL,
+    "contraseña" text NOT NULL,
+    edad integer ,
+    clasificacion text ,
+    correo text ,
+    "fecha_creación" date default now(),
+    PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.usuarios
+    OWNER to postgres;
+
+
+
+ALTER TABLE public.usuarios
+    ADD COLUMN categoria integer NOT NULL;
+
+insert into usuarios(nombre,contraseña) values('pedro','pablo'); 

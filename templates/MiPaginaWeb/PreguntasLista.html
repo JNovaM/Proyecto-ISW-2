@@ -1,0 +1,145 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Preguntas</title>
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="{% static 'assets/fonts/fontawesome-all.min.css' %}">
+    <script src="{% static 'js/read-excel-file.min.js' %}"></script>
+
+</head>
+
+<style>
+    .dicionarPregunta {
+        width: 100%;
+        height: 100px;
+        background-color: rgb(221, 229, 236);
+        box-shadow: 1px 1px 0px 0px rgb(189, 180, 180);
+    }
+    
+    .dicionarPregunta input {
+        height: 60px;
+    }
+</style>
+
+
+
+
+
+
+
+<div class="card-body">
+    <div class="row">
+        <div class="col">
+            <div class="text-md-end dataTables_filter" id="dataTable_filter">
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+        <table class="table my-0" id="dataTable">
+            <thead>
+
+                <tr>
+                    <th>No</th>
+                    <th>Pregunta</th>
+
+                    <th>Respuesta</th>
+
+                    <th>Observasión</th>
+
+
+
+
+                </tr>
+            </thead>
+            <tbody id="List_usuarios">
+
+                {% for lista in listas %}
+
+                <tr>
+
+                    <td name='elementoLista'>{{lista.1}}</td>
+                    <td>{{lista.2}}</td>
+
+                    <td><textarea style="border: 1px solid rgb(51, 65, 105); border-bottom: 1px solid; resize: none;" name="respuesta" type="text">{{lista.3}}</textarea></td>
+                    <td><textarea style="border: 1px solid rgb(51, 65, 105); border-bottom: 1px solid; resize: none;" name="obserb" type="text">{{lista.4}}</textarea></td>
+                    {% if lista.5 %}
+                    <form action="/eliminarPregunta/" method="post">{% csrf_token %}
+                        <td style="display: flex; align-items: center; margin-top: 10px;">
+                            <input type="text" name="No" id="No" style="display: none;" value="{{lista.1}}">
+                            <button>X</button></td>
+                    </form>
+                    {% endif %}
+                </tr>
+
+                {% endfor %}
+
+
+            </tbody>
+            <tfoot>
+                <tr></tr>
+            </tfoot>
+        </table>
+        {% if esAdmin %} {% else %}
+
+
+
+        <div style="width: 100%; display: flex; justify-content: center; margin-top: 20px; "><button style=" border: 1px solid; border-radius: 4px; " type="button" onclick="agregarPreg('{{ultimo}}')"><label id="agrg">+  <br>Agregar</label></button></div>
+
+        <hr>
+
+        <script>
+            aux = true;
+
+            function agregarPreg(aux2) {
+                if (aux) {
+                    document.getElementById("adpre").style.display = "Block";
+                    document.getElementById("agrg").innerHTML = 'Cancelar';
+                    document.getElementById("No").value = aux2;
+                    aux = false
+                } else {
+                    document.getElementById("adpre").style.display = "none";
+                    document.getElementById("agrg").innerHTML = '+  <br>Agregar';
+                    document.getElementById('preguntat').value = '';
+                    aux = true
+                }
+            }
+        </script>
+        <form action="/adicionarPLV/" method="post">{% csrf_token %}
+
+            <div class="dicionarPregunta" id="adpre" style="display: none;">
+                <div style="  display: flex; height: 40px; width: 100%; justify-content: center;">
+
+                    <input type="text" name="No" id="No" style="display: none;">
+
+                    <textarea style="resize: none; height: 60px; width: 300px;" name="pregunta" id="preguntat"></textarea>
+
+                    <input type="submit" value="Aceptar">
+                </div>
+            </div>
+        </form>
+        {% endif %}
+
+
+
+
+    </div>
+</div>
+
+
+<script src="{% static 'assets/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/js/chart.min.js' %}"></script>
+<script src="{% static 'assets/js/bs-init.js' %}"></script>
+<script src="{% static 'assets/js/theme.js' %}"></script>
+</body>
+
+</html>

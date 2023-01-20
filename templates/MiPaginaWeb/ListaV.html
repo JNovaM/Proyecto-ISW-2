@@ -1,0 +1,218 @@
+ {% extends 'MiPaginaWeb/Principal.html'%} {% block title %}Listas de verificación{% endblock%} {% block contenido%} {% load static %}
+
+<body id="page-top">
+
+
+
+
+
+    <link rel="stylesheet" href="{% static 'assets/css/modifiU.css'%}">
+    <div id="fondo-black"></div>
+    <div class="modificaruser" id="mdU" style="display: none; height: 270px;">
+        <form method="post" action="/asignarLista/">{% csrf_token %}
+
+            <div class="form-outline mb-4">
+                <select id="form5Example2" class="form-control" name="idU" id="">
+                    {% for u in listU %}
+                    {% if u.4 %}
+                    {% else %}
+                    <option value="{{u.5}}">{{u.0}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+                <label class="form-label" for="form5Example2">Usuario</label>
+            </div>
+            <div class="form-outline mb-4">
+                <select id="form5Example2" class="form-control" name="idP" id="">
+                    {% for P in listP %}
+                    <option value="{{P.5}}">{{P.0}}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" style="display: none;" name="idLV" id="idLV">
+                <label class="form-label" for="form5Example2">Producto</label>
+            </div>
+
+            <input style="display: none;" id='iduser' name="id" />
+            <button type="submit" class="btn btn-primary btn-block mb-4">Asignar</button>
+            <button type="button" class="btn btn-primary btn-block mb-4" style="margin-left: 46.9%;" onclick="location.href='/ListaV/'">Cancelar</button>
+        </form>
+    </div>
+
+    <form name="f3" action="/PregLV/" method="POST">{% csrf_token %}
+        <input type="text" style="display: none;" name="idLV22" id="idLV22">
+    </form>
+
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Listas de verificación</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold"><button class="btn btn-primary align-items-start" type="button" onclick="agregarUsers()" id="agregarLista">Agregar Lista de verificación</button></p>
+                            <div id="crearLista" style="display: none;">
+                                <div style="margin-top: 10px;">
+
+                                    {% include 'MiPaginaWeb/CrearListaV.html'%}
+                                </div>
+                                <hr>
+
+                            </div>
+                            <script>
+                                var control = true;
+
+                                function agregarUsers() {
+                                    if (control) {
+                                        document.getElementById('crearLista').style.display = 'flex'
+                                        document.getElementById('agregarLista').innerHTML = 'Cancelar'
+                                        control = false;
+                                    } else {
+                                        document.getElementById('agregarLista').innerHTML = 'Agregar Lista de verificación'
+                                        document.getElementById('crearLista').style.display = 'none'
+                                        control = true;
+                                        borrarelemento();
+                                    }
+                                }
+
+                                function borrarelemento() {
+                                    document.getElementById('ListaV2').value = ''
+
+
+                                }
+
+                                function seleccionarTodo() {
+
+                                    for (let i = 0; i < document.f1.elements.length; i++) {
+
+                                        if (document.f1.elements[i].type === "checkbox") {
+
+                                            document.f1.elements[i].checked = document.getElementById('referencia').checked;
+
+                                        }
+                                    }
+
+                                }
+
+                                function modificarUsuario(name) {
+
+                                    document.getElementById('mdU').style.display = 'block'
+                                    document.getElementById('fondo-black').style.display = 'block'
+                                    document.getElementById('idLV').value = name;
+
+
+
+                                }
+                            </script>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+
+
+                                        <form class="form-label" style="display: flex;" action="/buscarLV/" method="POST">{% csrf_token %}
+                                            <input style="margin-left: 80%; margin-top: 0.4px;" type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" name="search">
+
+                                            <button class="btn btn-outline-secondary" type="submit">
+                                                    <img src="{% static 'assets/img/comp/search-804.png' %}" style="width: 18px;height: auto;">
+                                                </button>
+                                        </form>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table my-0" id="dataTable">
+                                    <thead>
+
+                                        <tr>
+                                            <th>Nombre</th>
+
+                                            <th>Requisito</th>
+
+                                            <th></th>
+                                            {% if esAdmin %}
+                                            <th>
+                                                <div style="display: flex;">
+                                                    <input type="checkbox" id="referencia" style="width: 20px; height: 20px; margin-left: 4px;" onclick="seleccionarTodo()">
+
+
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <button class="btn btn-outline-primary" onclick="   document.f1.submit()"><img style="width: 15px;height: auto;" src="{% static 'assets/img/comp/delete.svg' %}" type='submit'></button>
+                                            </th>
+                                            {% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody id="List_usuarios">
+
+                                        <form name="f1" id="formElement" action="/eliminarLV/" method="POST">{% csrf_token %} {% for lista in listas%}
+
+                                            <tr>
+
+                                                <td name='elementoLista'>{{lista.1}}</td>
+                                                <td>{{lista.2}}</td>
+
+                                                <td>
+                                                    {% if esAdmin %}
+                                                    <button id='remuv' name='useraction' type="button" onclick="modificarUsuario('{{lista.0}}')" class="btn btn-outline-primary"><img style="width: 20px;height: auto;" src="{% static 'assets/img/comp/Asig.svg' %}" ></button>                                                    {% endif %}
+
+                                                    <button id='examinar' name='listaExaminar' type="button" onclick="verlistaP('{{lista.0}}')" class="btn btn-outline-primary"><img style="width: 20px;height: auto;" src="{% static 'assets/img/comp/show.svg' %}" ></button>
+                                                </td>
+                                                {% if esAdmin %}
+                                                <td>
+
+                                                    <input type="checkbox" value="{{lista.0}}" name="listaEliminar[]" style="width: 20px; height: 20px; margin-top: 4px;margin-left: 5px; border-radius: 6px;">
+                                                </td>
+                                                {% endif %}
+
+                                            </tr>
+
+                                            {% endfor %}
+                                        </form>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr></tr>
+                                    </tfoot>
+                                </table>
+                                <br>
+
+                                <script>
+                                    function verlistaP(id) {
+                                        document.getElementById('idLV22').value = id
+                                        document.f3.submit()
+
+                                    }
+                                </script>
+                                <nav aria-label="Page_navegar">
+                                    <ul class="pagination justify-content-center ">
+                                        <form action="/previous/ ">
+                                            {% if page > 1%}<button class="page-link " aria-disabled="true ">«</button>{% endif %}
+                                        </form>
+                                        <li class="page-item "><a class="page-link ">{{page}}</a></li>
+                                        <form action="/next/ ">
+                                            <button class="page-link ">»</button>
+                                        </form>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span></span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    {% endblock %}

@@ -1,0 +1,212 @@
+{% extends 'MiPaginaWeb/Principal.html'%} {% block title %}Producto{% endblock%} {% block contenido%} {% load static %}
+
+<body id="page-top">
+
+
+
+    <div id="fondo-black"></div>
+    <link rel="stylesheet" href="{% static 'assets/css/modifiU.css'%}">
+    <div class="modificarP" id="mdP" style="display: none;">
+        <form method="post" action="/modificarProducto/">{% csrf_token %}
+
+            <div class="form-outline mb-4">
+                <input type="text" id="pid" class="form-control" name="nombreProducto" required/>
+                <label class="form-label" for="form5Example1">Producto</label>
+            </div>
+
+
+            <div class="form-outline mb-4">
+                <input type="text" id="vercion" class="form-control" name="vercion" />
+                <label class="form-label" for="form5Example2" required>Verción</label>
+            </div>
+            <div class="form-outline mb-4">
+                <input type="date" id="FechaFin" class="form-control" name="FechaFin" />
+                <label class="form-label" for="form5Example2" required>Fecha de Final</label>
+            </div>
+            <div class="form-outline mb-4">
+                <select id="form5Example2" class="form-control" name="estado" id="">
+                    <option value="T">Producto terminado</option>
+                    <option value="P">Producto en proseso</option>
+                </select>
+                <label class="form-label" for="form5Example2">Estado</label>
+            </div>
+            <div class="form-outline mb-4">
+                <input type="number" style="width: 50px;" min="0" id="iteracion" class="form-control" name="iteracion" />
+                <label class="form-label" for="form5Example2" required>Iteración</label>
+            </div>
+            <div class="form-outline mb-4">
+                <select id="form5Example2" class="form-control" name="centro">
+                <option value="Centro de Software Libre (CESOL)">Centro de Software Libre (CESOL)</option>
+                <option value="Centro de Innovación y Desarrollo para Internet (CIDI)">Centro de Innovación y Desarrollo para Internet (CIDI)</option>
+                <option value="Centro de Informatización de la Gestión Documental (CIGED)">Centro de Informatización de la Gestión Documental (CIGED)</option>
+                <option value="Centro de Gobierno Electrónico (CEGEL)">Centro de Gobierno Electrónico (CEGEL)</option>
+                <option value="Centro de Informatización de la Gestión de Entidades (CEIGE)">Centro de Informatización de la Gestión de Entidades (CEIGE)</option>
+                <option value="Centro de Tecnologías para la Formación (FORTES)">Centro de Tecnologías para la Formación (FORTES)</option>
+                <option value="Centro de Tecnologías Interactivas">Centro de Tecnologías Interactivas</option>
+                <option value="Centro de Representación y Análisis de Datos (CREAD)">Centro de Representación y Análisis de Datos (CREAD)</option>
+                <option value="Centro de Informática Médica (CESIM)">Centro de Informática Médica (CESIM)</option>
+                <option value="Centro de Soporte">Centro de Soporte</option>
+              </select>
+            </div>
+
+            <input style="display: none;" id='idP' name="id" />
+            <button type="submit" class="btn btn-primary btn-block mb-4">Modificar</button>
+            <button type="button" class="btn btn-primary btn-block mb-4" style="margin-left: 46.9%;" onclick="location.href='/Productos/'">Cancelar</button>
+        </form>
+    </div>
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Productos</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold"><button class="btn btn-primary align-items-start" type="button" onclick="agregarProducto()" id="agregarProducto">Agregar Producto</button></p>
+                            <div id="crearproducto" style="display: none;">
+                                <div style="margin-top: 10px;">
+
+                                    {% include 'MiPaginaWeb/CrearProducto.html'%}
+                                </div>
+                                <hr>
+
+                            </div>
+                            <script>
+                                var control = true;
+
+                                function agregarProducto() {
+                                    if (control) {
+                                        document.getElementById('crearproducto').style.display = 'flex'
+                                        document.getElementById('agregarProducto').innerHTML = 'Cancelar'
+                                        control = false;
+                                    } else {
+                                        document.getElementById('agregarProducto').innerHTML = 'Agregar  Producto'
+                                        borrarelemento();
+                                        control = true;
+                                    }
+                                }
+
+                                function borrarelemento() {
+
+                                    document.getElementById('crearproducto').style.display = 'none'
+
+                                }
+
+                                function seleccionarTodo() {
+
+                                    for (let i = 0; i < document.f1.elements.length; i++) {
+
+                                        if (document.f1.elements[i].type === "checkbox") {
+
+                                            document.f1.elements[i].checked = document.getElementById('referencia').checked;
+
+                                        }
+                                    }
+
+                                }
+
+                                function modificarProducto(name) {
+
+                                    document.getElementById('mdP').style.display = 'block';
+                                    document.getElementById('fondo-black').style.display = 'block';
+                                    document.getElementById('pid').value = name;
+                                    document.getElementById('idP').value = name;
+
+                                }
+                            </script>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                                        <form class="form-label" style="display: flex;" action="/buscarP/" method="POST">{% csrf_token %}
+                                            <input style="margin-left: 80%; margin-top: 0.4px;" type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" name="search">
+
+                                            <button class="btn btn-outline-secondary" type="submit">
+                                                    <img src="{% static 'assets/img/comp/search-804.png' %}" style="width: 18px;height: auto;">
+                                                </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table my-0" id="dataTable">
+                                    <thead>
+
+                                        <tr>
+                                            <th>Producto</th>
+
+                                            <th>Versión</th>
+                                            <th>Fecha de creación</th>
+                                            <th>Fecha de fin</th>
+                                            <th>Centro de procedencia</th>
+                                            <th></th>
+                                            <th>
+                                                <div style="display: flex;">
+                                                    <input type="checkbox" id="referencia" style="width: 20px; height: 20px; margin-left: 4px;" onclick="seleccionarTodo()">
+
+
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <button class="btn btn-outline-primary" onclick="   document.f1.submit()"><img style="width: 15px;height: auto;" src="{% static 'assets/img/comp/delete.svg' %}" type='submit'></button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="List_usuarios">
+                                        <form name="f1" id="formElement" action="/eliminarProducto/" method="POST">{% csrf_token %} {% for producto in productos%}
+
+                                            <tr>
+
+                                                <td name='elementoUser'>{{producto.0}}</td>
+                                                <td>{{producto.1}}</td>
+                                                <td>{{producto.2}}</td>
+                                                <td>{{producto.3}}</td>
+                                                <td>{{producto.4}}</td>
+                                                <td>
+                                                    <button id='remuv' name='productoaction' type="button" onclick="modificarProducto('{{producto.0}}')" class="btn btn-outline-primary"><img style="width: 20px;height: auto;" src="{% static 'assets/img/comp/new.svg' %}" ></button>
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" value="{{producto.5}}" name="listaEliminar[]" style="width: 20px; height: 20px; margin-top: 4px;margin-left: 5px; border-radius: 6px;">
+                                                </td>
+
+                                            </tr>
+
+                                            {% endfor %}
+                                        </form>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr></tr>
+                                    </tfoot>
+                                </table>
+                                <br>
+
+                                <nav aria-label="Page_navegar">
+                                    <ul class="pagination justify-content-center ">
+                                        <form action="/previous/ ">
+                                            {% if page > 1%}<button class="page-link " aria-disabled="true ">«</button>{% endif %}
+                                        </form>
+                                        <li class="page-item " name='sesion' value="Producto"><a class="page-link ">{{page}}</a></li>
+                                        <form action="/next/ ">
+                                            <button class="page-link ">»</button>
+                                        </form>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span></span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    {% endblock %}

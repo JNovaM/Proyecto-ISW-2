@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/StyleAU.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'assets/bootstrap/js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/read-excel-file.min.js' %}"></script>
+</head>
+
+<body>
+
+
+    <form name="f2" method="POST" action="/crearListaV/">{% csrf_token %}
+        <textarea name="listaV1" id="listaV1" style="display: none;"></textarea>
+        <input type="text" name="requisito" id="requisito" style="display: none;">
+    </form>
+
+    <form>
+        <nav id="container">
+            <div style=" display: flex; flex-direction: column;">
+                <div id="divuser">
+                    <p>Archivo con las listas de verificación</p>
+                    <input type="file" id="ListaV2" required/>
+                </div>
+                <div id="divuser">
+                    <p>Requisito de calidad</p>
+                    <select id="rc">
+                        <option value = "Usabilidad">Usabilidad</option>
+                        <option value = "Usabilidad">Fiabilidad</option>
+                        <option value = "Usabilidad">Seguridad</option>
+                        <option value = "Usabilidad">Mantenibilidad</option>
+                        <option value = "Usabilidad">Portavilidad</option>
+                        <option value = "Usabilidad">Compatibilidad</option>
+                        <option value = "Usabilidad">Eficiencia de Desempeño</option>
+                        <option value = "Usabilidad">Adecuación Funcional</option>
+                        </select>
+                </div>
+            </div>
+        </nav>
+        <div id="mensaje" style="color: blue; width: 400px; height: 20px; position: absolute;"></div>
+        <input type="button" value="Registrar" style="margin-left: 589px;" onclick="document.f2.submit()" class="btn btn-primary" id="registrarce">
+
+        <hr>
+    </form>
+
+
+
+
+    <script>
+        const excelfile = document.getElementById('ListaV2')
+
+        excelfile.addEventListener('change', async function() {
+            const content = await readXlsxFile(excelfile.files[0]);
+            console.log(content);
+            var texto;
+            content.forEach(element => {
+                if (element[1] != null || element[2] != null || element[3] != null) {
+                    if (element[1] == null) {
+                        texto += element[2] + '\n';
+                    } else {
+                        texto += element[1] + "," + element[2] + "," + element[3] + "," + element[4] + '\n';
+                    }
+                }
+            });
+
+            document.getElementById("listaV1").value = texto;
+            document.getElementById("requisito").value = document.getElementById("rc").value;
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{% static 'assets/css/StyleAU.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'assets/bootstrap/js/jquery.min.js' %}"></script>
+</head>
+
+<body>
+    <script>
+        function validar() {
+            if (document.getElementById('passw').value == document.getElementById('passw1').value) {
+                return true;
+            } else {
+                alert('Las contraseñas no son iguales')
+                return false;
+
+            }
+        }
+
+        function validarM() {
+            if (document.getElementById('passwM').value == document.getElementById('passw1M').value) {
+                return true;
+            } else {
+                alert('Las contraseñas no son iguales')
+                return false;
+
+            }
+        }
+    </script>
+    <form action="/crearUser/" method="POST" onsubmit="return validar()">{% csrf_token %}
+        <nav id="container">
+            <div id="divuser">
+                <p>Usuario</p>
+                <input type="text" required pattern="[a-z]+" minlength="4" name="name" id="name">
+            </div>
+            <div id="divpass">
+                <p id="pass">Contraseña</p>
+                <input type="password" required name="passw" minlength="8" id="passw">
+            </div>
+
+            <div id="divrestpass">
+                <p id="recpass">Rectificar contraseña</p>
+                <input type="password" required name="passw1" minlength="8" id="passw1">
+
+            </div>
+
+            <select name="Categoria" id="Categoria">
+             <option value="Admin">Administrador</option>
+             <option value="Revisor">Revisor</option>   
+            </select>
+
+        </nav>
+        <div id="mensaje" style="color: blue; width: 400px; height: 20px; position: absolute;"></div>
+        <input type="submit" value="Registrar" style="margin-left: 589px;" class="btn btn-primary" id="registrarce">
+
+        <hr>
+    </form>
+
+</body>
+
+</html>

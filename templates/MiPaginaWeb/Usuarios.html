@@ -1,0 +1,206 @@
+ {% extends 'MiPaginaWeb/Principal.html'%} {% block title %}Usuarios{% endblock%} {% block contenido%} {% load static %}
+
+<body id="page-top">
+
+
+    <link rel="stylesheet" href="{% static 'assets/css/modifiU.css'%}">
+    <div id="fondo-black"></div>
+    <div class="modificaruser" id="mdU" style="display: none;">
+        <form method="post" action="/modificaruser/" onsubmit="return validarM()">{% csrf_token %}
+
+            <div class="form-outline mb-4">
+                <input type="text" id="userM" class="form-control" name="usuario" required/>
+                <label class="form-label" for="form5Example1">Usuario</label>
+            </div>
+
+
+            <div class="form-outline mb-4">
+                <input type="password" id="passwM" class="form-control" name="passw" required minlength="8" />
+                <label class="form-label" for="form5Example2" required>Contraseña</label>
+            </div>
+            <div class="form-outline mb-4">
+                <input type="password" id="passw1M" class="form-control" required minlength="8" />
+                <label class="form-label" for="form5Example2" required>Rectificar Contraseña</label>
+            </div>
+            <div class="form-outline mb-4">
+                <select id="form5Example2" class="form-control" name="esAdmin" id="">
+                    <option value="A">Administrador</option>
+                    <option value="R">Revisor</option>
+                </select>
+                <label class="form-label" for="form5Example2">Rol</label>
+            </div>
+
+
+            <input style="display: none;" id='iduser' name="id" />
+            <button type="submit" class="btn btn-primary btn-block mb-4">Modificar</button>
+            <button type="button" class="btn btn-primary btn-block mb-4" style="margin-left: 46.9%;" onclick="location.href='/Usuarios/'">Cancelar</button>
+        </form>
+    </div>
+
+
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Usuarios</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold"><button class="btn btn-primary align-items-start" type="button" onclick="agregarUsers()" id="agregarUser">Agregar Usuario</button></p>
+                            <div id="crearuser" style="display: none;">
+                                <div style="margin-top: 10px;">
+
+                                    {% include 'MiPaginaWeb/CrearUsuario.html'%}
+                                </div>
+                                <hr>
+
+                            </div>
+                            <script>
+                                var control = true;
+
+                                function agregarUsers() {
+                                    if (control) {
+                                        document.getElementById('crearuser').style.display = 'flex'
+                                        document.getElementById('agregarUser').innerHTML = 'Cancelar'
+                                        control = false;
+                                    } else {
+                                        document.getElementById('agregarUser').innerHTML = 'Agregar Usuario'
+                                        borrarelemento();
+                                        control = true;
+                                    }
+                                }
+
+                                function borrarelemento() {
+                                    document.getElementById('name').value = ''
+                                    document.getElementById('passw').value = ''
+                                    document.getElementById('passw1').value = ''
+                                    document.getElementById('Categoria').value = 'Admin'
+                                    document.getElementById('crearuser').style.display = 'none'
+
+                                }
+
+                                function seleccionarTodo() {
+
+                                    for (let i = 0; i < document.f1.elements.length; i++) {
+
+                                        if (document.f1.elements[i].type === "checkbox") {
+
+                                            document.f1.elements[i].checked = document.getElementById('referencia').checked;
+
+                                        }
+                                    }
+
+                                }
+
+                                function modificarUsuario(name) {
+
+                                    document.getElementById('mdU').style.display = 'block'
+                                    document.getElementById('fondo-black').style.display = 'block'
+                                    document.getElementById('userM').value = name;
+                                    document.getElementById('iduser').value = name;
+
+                                }
+                            </script>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+
+
+                                        <form class="form-label" style="display: flex;" action="/buscarU/" method="POST">{% csrf_token %}
+                                            <input style="margin-left: 80%; margin-top: 0.4px;" type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" name="search">
+
+                                            <button class="btn btn-outline-secondary" type="submit">
+                                                    <img src="{% static 'assets/img/comp/search-804.png' %}" style="width: 18px;height: auto;">
+                                                </button>
+                                        </form>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table my-0" id="dataTable">
+                                    <thead>
+
+                                        <tr>
+                                            <th>Usuario</th>
+
+                                            <th>Correo</th>
+                                            <th>Edad</th>
+                                            <th>Fecha de creación</th>
+                                            <th>Tipo de cuenta</th>
+                                            <th></th>
+                                            <th>
+                                                <div style="display: flex;">
+                                                    <input type="checkbox" id="referencia" style="width: 20px; height: 20px; margin-left: 4px;" onclick="seleccionarTodo()">
+
+
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <button class="btn btn-outline-primary" onclick="   document.f1.submit()"><img style="width: 15px;height: auto;" src="{% static 'assets/img/comp/delete.svg' %}" type='submit'></button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="List_usuarios">
+
+                                        <form name="f1" id="formElement" action="/eliminarUser/" method="POST">{% csrf_token %} {% for usuario in usuarios%}
+
+                                            <tr>
+
+                                                <td name='elementoUser'><img class='rounded-circle me-2' width='30' height='30' src="{% static 'assets/img/avatars/avatar1.svg' %}">{{usuario.0}}</td>
+                                                <td>{{usuario.1}}</td>
+                                                <td>{{usuario.2}}</td>
+                                                <td>{{usuario.3}}</td>
+                                                <td>{% if usuario.4 %} Administrador {% else %} Revisor {% endif%}</td>
+                                                <td>
+
+                                                    <button id='remuv' name='useraction' type="button" onclick="modificarUsuario('{{usuario.0}}')" class="btn btn-outline-primary"><img style="width: 20px;height: auto;" src="{% static 'assets/img/comp/new.svg' %}" ></button>
+
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" value="{{usuario.5}}" name="listaEliminar[]" style="width: 20px; height: 20px; margin-top: 4px;margin-left: 5px; border-radius: 6px;">
+                                                </td>
+
+                                            </tr>
+
+                                            {% endfor %}
+                                        </form>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr></tr>
+                                    </tfoot>
+                                </table>
+                                <br>
+
+                                <nav aria-label="Page_navegar">
+                                    <ul class="pagination justify-content-center ">
+                                        <form action="/previous/ ">
+                                            {% if page > 1%}<button class="page-link " aria-disabled="true ">«</button>{% endif %}
+                                        </form>
+                                        <li class="page-item "><a class="page-link ">{{page}}</a></li>
+                                        <form action="/next/ ">
+                                            <button class="page-link ">»</button>
+                                        </form>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span></span></div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    {% endblock %}
